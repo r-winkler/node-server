@@ -4,14 +4,32 @@ var util = require('util');
 
 var server = http.createServer(function(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Acess-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     
     if (req.method.toLowerCase() == 'post') {
         processForm(req, res);
         return;
     }
+	
+	if(req.method.toLowerCase() == 'get') {
+		var data = {
+			data: {
+				languages: [
+					'English',
+					'Spanish',
+					'German',
+					'Other'
+				]
+			}
+		};
+		
+		var responseData = JSON.stringify(data);
+		res.end(responseData);
+		console.log("get: ", responseData);
+		return;
+	}
     
-    res.end;
+    res.end();
 });
 
 function processForm(req, res) {
@@ -22,15 +40,15 @@ function processForm(req, res) {
         res.writeHead(200, {
             'content-type': 'text/plain'
         });
+
+	var data = JSON.stringify({
+		fields : fields
+	});
         
-        res.end(util.inspect({
-            fields: fields
-        }));
+        res.end(data);
         
         console.log('posted fields: \n');
-        console.log(util.inspect({
-            fields: fields
-        }));
+        console.log(data);
     });
 }
 
